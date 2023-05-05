@@ -1,5 +1,12 @@
 <?php
 
+require '../includes/funciones.php';
+$auth = estaAutenticado();
+
+if (!$auth) {
+    header('Location: ../index.php');
+}
+
 // Importar la conexion
 require '../includes/config/database.php';
 $db = conectarDB();
@@ -66,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="../anuncios.php">Anuncios</a>
                         <a href="../blog.php">Blog</a>
                         <a href="../contacto.php">Contacto</a>
+                        <?php if($auth): ?>
+                            <a href="../cerrar-sesion.php">Cerrar Sesión</a>
+                        <?php endif ?>
                     </nav>
                 </div>
 
