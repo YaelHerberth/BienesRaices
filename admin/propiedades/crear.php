@@ -1,12 +1,17 @@
 <?php
-require '../../includes/funciones.php';
+require '../../includes/app.php';
+
+use App\Propiedad;
+$propiedad = new Propiedad;
+var_dump($propiedad);
+
+$db = conectarDB();
 $auth = estaAutenticado();
 
 if(!$auth){
     header('Location: ../../index.php');
 }
-require '../../includes/config/database.php';
-$db = conectarDB();
+
 
 //Consultar para obtener a los vendedores
 $consulta = 'SELECT * FROM vendedores';
