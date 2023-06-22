@@ -11,6 +11,7 @@ if(!$id){
 }
 
 require 'includes/app.php';
+//Conexion a la base de datos
 $db = conectarDB();
 
 // var_dump($id);
@@ -23,9 +24,6 @@ if($resultado->num_rows === 0){
     header('Location: index.php');
 }
 $propiedad = mysqli_fetch_assoc($resultado);
-
-
-
 
 incluirTemplate('header');
 
