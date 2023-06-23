@@ -4,11 +4,14 @@ require '../includes/app.php';
 $auth = estaAutenticado();
 
 use App\Propiedad;
+use App\Vendedor;
 
 // Implementar un metodo para obtener todas las propiedades
 $propiedades = Propiedad::all();
 
-// var_dump($_GET);
+// Implementar un metodo para obtener todos los vendedores
+$vendedores = Vendedor::all();
+
 $resultado = $_GET['resultado'] ?? null; // Las ?? Sirve para asignarle un valor a la variable si esta no tinene un valor definido
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,22 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = filter_var($id, FILTER_VALIDATE_INT);
 
     if ($id) {
-        //Eliminar el archivo
-        $query = "SELECT imagen FROM propiedades WHERE id = {$id}";
 
-        $resultado = mysqli_query($db, $query);
-        $propiedad = mysqli_fetch_assoc($resultado);
+        // Obtener los datos de la propiedad
+        $propiedad = Propiedad::find($id);
 
-        unlink('../Imagenes/' . $propiedad['imagen']);
-
-        //Eliminar el registro
-        $query = "DELETE FROM propiedades WHERE id = {$id}";
-        $resultado  = mysqli_query($db, $query);
-
-        if ($resultado) {
-            header('Location: /BienesRaices/admin/index.php?resultado=3');
-            // require '/wamp64/www/BienesRaices/admin/index.php';
-        }
+        $propiedad->eliminar();
     }
 }
 ?>
@@ -64,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="../anuncios.php">Anuncios</a>
                         <a href="../blog.php">Blog</a>
                         <a href="../contacto.php">Contacto</a>
-                        <?php if($auth): ?>
+                        <?php if ($auth) : ?>
                             <a href="../cerrar-sesion.php">Cerrar Sesión</a>
                         <?php endif ?>
                     </nav>
@@ -84,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="alerta exito">Anuncio Eliminado Correctamente</p>
         <?php endif ?>
         <a href="propiedades/crear.php" class="boton boton-verde">Nueva Propiedad</a>
+        <h2>Propiedades</h2>
 
         <table class="propiedades">
             <thead>
@@ -113,6 +106,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endforeach ?>
             </tbody>
         </table>
+
+        <h2>Vendedores</h2>
+
+        <table class="vendedores">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($vendedores as $vendedor) : ?>
+                    <tr>
+                        <td><?= $vendedor->id ?></td>
+                        <td><?= $vendedor->nombre . ' ' .$vendedor->apellido ?></td>
+                        <td><?= $vendedor->telefono ?></td>
+                        <td>
+                            <form class="w-100" method="POST" action="">
+                                <input type="hidden" name="id" value="<?= $vendedor->id ?>">
+                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                            </form>
+                            <a href="vendedores/actualizar.php?id=<?= $vendedor->id ?>" class="boton-amarillo-block">Actualizar</a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+
     </main>
 
     <footer class="footer seccion">

@@ -2,17 +2,15 @@
 require '../../includes/app.php';
 
 use App\Propiedad;
+use App\Vendedor;
 use Intervention\Image\ImageManagerStatic as Image;
 
-
 estaAutenticado();
-$db = conectarDB();
 
 $propiedad = new Propiedad();
 
-//Consultar para obtener a los vendedores
-$consulta = 'SELECT * FROM vendedores';
-$resultadoo = mysqli_query($db, $consulta);
+// Consulta para obtener todos los vendedores
+$vendedores = Vendedor::all();
 
 // Arreglo con mensaje de errores
 $errores = Propiedad::getErrores();
@@ -25,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $propiedad = new Propiedad($_POST['propiedad']);
 
     /* Subida de archivos */
-
     //Generar un nombre unico
     $nombreImagen = md5(uniqid(rand(), true)) . '.jpg';
 
@@ -39,10 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar
     $errores = $propiedad->validar();
 
+
     // Revisar que no contenga ningun error almacenado en el arreglo de errores
     if (empty($errores)) {
-
-        
 
         // Crear la carpeta para subir imagenes
         if (!is_dir(CARPETA_IMAGENES)) {
@@ -53,13 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image->save(CARPETA_IMAGENES . $nombreImagen);
 
         // Guardar en la base de datos
-        $resultado = $propiedad->guardar();
-
-        // Mensaje de exito o error
-        if ($resultado) {
-            //Redireccionar al usuario
-            header('Location: /BienesRaices/admin/index.php?resultado=1');
-        }
+        $propiedad->guardar();
     }
 }
 ?>
