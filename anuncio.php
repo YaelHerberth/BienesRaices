@@ -1,58 +1,48 @@
 <?php
-// Importar la base de datos
-// require 'includes/config/database.php';
+require 'includes/app.php';
+use App\Propiedad;
 
 // Consultar
 $id = $_GET['id'];
 $id = filter_var($id, FILTER_VALIDATE_INT);
 
 if(!$id){
-    header('Location: index.php');
+    header('Location: /');
 }
 
-require 'includes/app.php';
-//Conexion a la base de datos
-$db = conectarDB();
+$propiedad = Propiedad::find($id);
 
-// var_dump($id);
-$query = "SELECT * FROM propiedades WHERE id = {$id}";
-// echo $query;
-
-// Obtener los resultados
-$resultado = mysqli_query($db,$query);
-if($resultado->num_rows === 0){
+if(!$propiedad){
     header('Location: index.php');
 }
-$propiedad = mysqli_fetch_assoc($resultado);
 
 incluirTemplate('header');
-
 ?>
 
 <main class="contenedor seccion contenido-centrado">
-    <h1><?= $propiedad['titulo'] ?></h1>
+    <h1><?= $propiedad->titulo ?></h1>
     <picture>
-        <img loading="lazy" src="Imagenes/<?= $propiedad['imagen'] ?>" alt="Imagen de la propiedad">
+        <img loading="lazy" src="Imagenes/<?= $propiedad->imagen ?>" alt="Imagen de la propiedad">
     </picture>
     <div class="resumen-propiedad">
-        <p class="precio"><?= $propiedad['precio'] ?></p>
+        <p class="precio"><?= $propiedad->precio ?></p>
         <ul class="iconos-caracteristicas">
             <li>
                 <img class="icono" loading="lazy" src="build/img/icono_wc.svg" alt="Icono WC">
-                <p><?= $propiedad['wc'] ?></p>
+                <p><?= $propiedad->wc ?></p>
             </li>
             <li>
                 <img class="icono" loading="lazy" src="build/img/icono_estacionamiento.svg" alt="Icono estacionamiento">
-                <p><?= $propiedad['estacionamiento'] ?></p>
+                <p><?= $propiedad->estacionamiento ?></p>
             </li>
             <li>
                 <img class="icono" loading="lazy" src="build/img/icono_dormitorio.svg" alt="Icono Habitaciones">
-                <p><?= $propiedad['habitaciones'] ?></p>
+                <p><?= $propiedad->habitaciones ?></p>
             </li>
         </ul>
-        <p><?= $propiedad['descripcion'] ?></p>
+        <p><?= $propiedad->descripcion ?></p>
 
-        
+
     </div>
 </main>
 

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Setear la imagen
     // Realiza un resize a la imagen con intervention
-    if($_FILES['propiedad']['tmp_name']['imagen']){
+    if ($_FILES['propiedad']['tmp_name']['imagen']) {
         $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
         $propiedad->setImagen($nombreImagen);
     }
@@ -52,81 +52,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $propiedad->guardar();
     }
 }
+
+incluirTemplate('header')
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<main class="contenedor seccion">
+    <h1>Crear Propiedad</h1>
+    <a href="../index.php" class="boton boton-verde">Volver</a>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienes Raices</title>
-    <link rel="stylesheet" href="../../build/css/app.css">
-</head>
-
-<body>
-    <header class="header <?php //echo $inicio ? 'inicio' : ''; 
-                            ?>">
-        <div class="contenedor contenido-header">
-            <div class="barra">
-                <a href="index.php">
-                    <img src="../../build/img/logo.svg" alt="Logotipo de Bienes Raices">
-                </a>
-
-                <div class="mobile-menu">
-                    <img src="../../build/img/barras.svg" alt="Icono menu responsive">
-                </div>
-                <div class="derecha">
-                    <img class="dark-mode-boton" src="../../build/img/dark-mode.svg" alt="Modo Oscuro">
-                    <nav class="navegacion">
-                        <a href="../../nosotros.php">Nosotros</a>
-                        <a href="../../anuncios.php">Anuncios</a>
-                        <a href="../../blog.php">Blog</a>
-                        <a href="../../contacto.php">Contacto</a>
-                        <?php $auth = true;
-                        if ($auth) : ?>
-                            <a href="../cerrar-sesion.php">Cerrar Sesión</a>
-                        <?php endif ?>
-                    </nav>
-                </div>
-
-            </div>
+    <?php foreach ($errores as $error) : ?>
+        <div class="alerta error">
+            <?php echo $error; ?>
         </div>
-    </header>
 
-    <main class="contenedor seccion">
-        <h1>Crear</h1>
-        <a href="../index.php" class="boton boton-verde">Volver</a>
+    <?php endforeach ?>
 
-        <?php foreach ($errores as $error) : ?>
-            <div class="alerta error">
-                <?php echo $error; ?>
-            </div>
+    <form class="formulario" method="POST" action="crear.php" enctype="multipart/form-data">
 
-        <?php endforeach ?>
+        <?php include "../../includes/templates/formulario_propiedades.php" ?>
 
-        <form class="formulario" method="POST" action="crear.php" enctype="multipart/form-data">
-            
-            <?php include "../../includes/templates/formulario_propiedades.php" ?>
+        <input type="submit" value="Crear Propiedad" class="boton boton-verde">
+    </form>
+</main>
 
-            <input type="submit" value="Crear Propiedad" class="boton boton-verde">
-        </form>
-    </main>
-
-    <footer class="footer seccion">
-        <div class="contenedor contenedor-footer">
-            <nav class="navegacion">
-                <a href="../../nosotros.php">Nosotros</a>
-                <a href="../../anuncios.php">Anuncios</a>
-                <a href="../../blog.php">Blog</a>
-                <a href="../../contacto.php">Contacto</a>
-            </nav>
-        </div>
-        <p class="copyright">Todos los Derechos Reservados <?= date('Y'); ?> &copy;</p>
-    </footer>
-
-    <script src="../../build/js/bundle.min.js"></script>
-</body>
-
-</html>
+<?php incluirTemplate('footer'); ?>
