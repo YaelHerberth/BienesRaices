@@ -79,4 +79,4 @@ incluirTemplate('header');
     </form>
 </main>
 
-<?php incluirTemplate('header'); ?>
+<?php incluirTemplate('footer'); ?>
